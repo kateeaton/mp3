@@ -26,7 +26,7 @@ public class Parser {
             Integer emptyLines = 0;
             boolean first = true;
             while ((readLine = b.readLine()) != null) {
-                System.out.println(readLine);
+                //System.out.println(readLine);
                 if(readLine.length() == 0){
                     emptyLines++;
                 }
