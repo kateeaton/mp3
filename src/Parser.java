@@ -2,9 +2,12 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Vector;
 
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 //File used to parse the txt files of the mazes
 public class Parser {
@@ -13,15 +16,13 @@ public class Parser {
         //// some code from https://www.mkyong.com/java/java-read-a-text-file-line-by-line/
         ArrayList<String> list = new ArrayList<>();
         ArrayList<ArrayList<String>> retVal = new ArrayList<>();
-
         try {
-
             File f = new File(args);
+            //System.out.println("here");
 
             BufferedReader b = new BufferedReader(new FileReader(f));
 
             String readLine = "";
-
             System.out.println("Reading file using Buffered Reader");
             Integer emptyLines = 0;
             boolean first = true;
@@ -46,18 +47,66 @@ public class Parser {
                     if(readLine.length() > 0){
                         list.add(readLine);
                     }
-
                 }
-
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         return retVal;
-
     }
+
+    public ArrayList<ArrayList<String>> parseDigits(String args) throws FileNotFoundException{
+        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<ArrayList<String>> samples = new ArrayList<>();
+        try{
+            File f = new File(args);
+            System.out.println(f);
+            String readline = "";
+            BufferedReader b = new BufferedReader(new FileReader(f));
+            System.out.println(f);
+            int i = 0;
+            while((readline = b.readLine()) != null){
+                if(i == 28){
+                    samples.add(lines);
+                    lines = new ArrayList<>();
+                    i = 0;
+                }
+
+                lines.add(readline);
+
+                i++;
+
+            }
+
+        } catch (IOException e){ e.printStackTrace();}
+        return samples;
+    }
+    public int[] digitLabelParse(String args) throws FileNotFoundException {
+        //https://stackoverflow.com/questions/7646392/convert-string-to-int-array-in-java
+        //http://javarevisited.blogspot.com/2015/09/how-to-read-file-into-string-in-java-7.html
+        int[] failvar = new int[10];
+        System.out.println(Paths.get(args));
+        try {
+            String contents = new String(Files.readAllBytes(Paths.get(args)));
+            String[] splitContents = contents.split("\n");
+
+            int[] retVal = new int[splitContents.length];
+
+            for (int i = 0; i < splitContents.length; i++) {
+                try {
+                    retVal[i] = Integer.parseInt(splitContents[i]);
+                } catch (NumberFormatException nfe) {
+                    //NOTE: write something here if you need to recover from formatting errors
+                }
+                ;
+            }
+            return retVal;
+        } catch (IOException e) { e.printStackTrace();}
+
+        return failvar;
+    }
+
     public Character[][][] toMatrix(ArrayList<ArrayList<String>> arg){
         Integer i = arg.size();
         Integer j = arg.get(0).size();
@@ -72,6 +121,7 @@ public class Parser {
         }
         return retVal;
     }
+
     public ArrayList<Integer> findP(ArrayList<String> arg){
         ArrayList<Integer> retVal = new ArrayList<>();
         for(int i=0; i<arg.size(); i++){
@@ -110,47 +160,6 @@ public class Parser {
         }
         return retVal;
     }
-
-//    public ArrayList<ArrayList<CSP>> getCSP(ArrayList<String> arg, Integer size){
-//        ArrayList<ArrayList<CSP>> retVal = new ArrayList<>();
-//        Character[][] charMap = new Character[size][size];
-//        ArrayList<Character> domain = new ArrayList<>();
-//        for(int i=0; i<size; i++){
-//            ArrayList<CSP> arr = new ArrayList();
-//            retVal.add(arr);
-//            for(int j=0; j<size; j++){
-//                CSP temp = new CSP();
-//                temp.x = i;
-//                temp.y = j;
-//                if(arg.get(i).charAt(j) != '_'){
-//                    temp.initialValue = true;
-//                    if(domain.indexOf(arg.get(i).charAt(j)) < 0){
-//                        domain.add(arg.get(i).charAt(j));
-//                    }
-//                }
-//                else{
-//                    temp.initialValue = false;
-//                    temp.parent = false;
-//                }
-//                temp.setValue(arg.get(i).charAt(j));
-//                retVal.get(i).add(temp);
-//                charMap[i][j] = toLowerCase(temp.getValue());
-//                //charMap[i][j] = toLowerCase(charMap[i][j]);
-//                //retVal[i][j].setValue(arg.get(i).charAt(j));
-//            }
-//        }
-//        charMap[0][0] = toUpperCase(charMap[0][0]);
-//        for(int i=0; i<size; i++){
-//            for(int j=0; j<size; j++){
-//                retVal.get(i).get(j).setDomain(domain);
-//                retVal.get(i).get(j).updateMap(charMap);
-//                for(int x = 0; x<domain.size(); x++){
-//                    retVal.get(i).get(j).visited.add(false);
-//                }
-//            }
-//        }
-//        return retVal;
-//    }
 
 
     public Parser() throws FileNotFoundException {

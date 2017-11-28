@@ -61,6 +61,7 @@ public class Train {
         Integer x = test[0][0].length;
         Double noLikelihood = Math.log(probNo);
         Double yesLikelihood = Math.log(probYes);
+
         for(int i=0; i<z; i++){
             for(int j=0; j<y; j++){
                 for(int k=0; k<x; k++){
